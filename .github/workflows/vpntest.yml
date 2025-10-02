@@ -27,5 +27,5 @@ jobs:
 
       - name: Run curl inside alpine
         run: |
-          docker run --rm \
+          docker run --rm --network=container:${{ job.services.vpn.id }} \
             alpine/curl:latest -fsSL https://www.cloudflare.com/cdn-cgi/trace/

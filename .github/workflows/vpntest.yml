@@ -16,12 +16,13 @@ jobs:
           --sysctl net.ipv4.conf.all.src_valid_mark=1
           --health-cmd="curl -fsSL https://www.cloudflare.com/cdn-cgi/trace/ | grep warp=on || exit 1"
           --health-interval=5s
-          --health-retries=6
+          --health-retries=5
+          --health-start-period=10s
         # 注意：GitHub Actions 的 services 不支持 --restart unless-stopped
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Run curl inside alpine
         run: |

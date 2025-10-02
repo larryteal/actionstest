@@ -1,0 +1,26 @@
+name: VPN Test Action
+
+on:
+  workflow_dispatch:   # 手动触发
+
+jobs:
+  vpn-test:
+    runs-on: ubuntu-latest
+
+    services:
+      vpn:
+        image: larryteal/cwcid:latest
+        options: >-
+          --cap-add=NET_ADMIN
+          --sysctl net.ipv6.conf.all.disable_ipv6=0
+          --sysctl net.ipv4.conf.all.src_valid_mark=1
+        # 注意：GitHub Actions 的 services 不支持 --restart unless-stopped
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run curl inside alpine
+        run: |
+          docker run --rm --network=container:${{ job.services.vpn.id }} \
+            alpine/curl:latest -fsSL https://www.cloudflare.com/cdn-cgi/trace/
